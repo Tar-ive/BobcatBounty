@@ -1,6 +1,10 @@
-import { pgTable, text, integer, timestamp, json, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, json, boolean, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Enum types for brand and category
+const brandEnum = z.enum(['nike', 'adidas', 'puma', 'reebok']); // Update with your actual brand values
+const categoryEnum = z.enum(['shoes', 'clothes', 'accessories']); // Update with your actual category values
 
 export const products = pgTable("products", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
@@ -11,6 +15,19 @@ export const products = pgTable("products", {
   dietary: json("dietary").notNull().default(['{}']).$type<string[]>(),
   imageUrl: text("image_url"),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const product1 = pgTable("product1", {
+  productId: integer("product_id").primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar("name", { length: 100 }).notNull(),
+  brand: text("brand").notNull(), // Assuming brand_type is implemented as text
+  category: text("category").notNull(), // Assuming category_type is implemented as text
+  calories: integer("calories"),
+  quantity: integer("quantity").notNull(),
+  expiryDays: integer("expiry_days").notNull(),
+  vegan: boolean("vegan").notNull(),
+  glutenFree: boolean("gluten_free").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const recipes = pgTable("recipes", {
@@ -33,11 +50,19 @@ export const locationInfo = pgTable("location_info", {
   hours: json("hours").notNull().$type<Record<string, string>>(),
 });
 
+// Existing schemas
 export const insertProductSchema = createInsertSchema(products);
 export const selectProductSchema = createSelectSchema(products);
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = z.infer<typeof selectProductSchema>;
 
+// New product1 schemas
+export const insertProduct1Schema = createInsertSchema(product1);
+export const selectProduct1Schema = createSelectSchema(product1);
+export type InsertProduct1 = z.infer<typeof insertProduct1Schema>;
+export type Product1 = z.infer<typeof selectProduct1Schema>;
+
+// Existing schemas
 export const insertRecipeSchema = createInsertSchema(recipes);
 export const selectRecipeSchema = createSelectSchema(recipes);
 export type InsertRecipe = z.infer<typeof insertRecipeSchema>;
