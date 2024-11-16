@@ -1,7 +1,7 @@
 import type { Express } from "express";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { db } from "../db";
-import { products1, recipes, locationInfo } from "../db/schema";
+import { products1, recipes, locationInfo, productRecipes } from "../db/schema";
 
 export function registerRoutes(app: Express) {
   // Products
@@ -66,11 +66,77 @@ export function registerRoutes(app: Express) {
   // Recipes
   app.get("/api/products/:id/recipes", async (req, res) => {
     try {
-      const productRecipes = await db.select().from(recipes);
-      res.json(productRecipes);
+      const productId = parseInt(req.params.id);
+      
+      // Get product recipes with priority ordering
+      const recipeRelations = await db
+        .select({
+          recipeId: productRecipes.recipeId,
+        })
+        .from(productRecipes)
+        .where(eq(productRecipes.productId, productId))
+        .orderBy(asc(productRecipes.priority))
+        .limit(4);
+
+      if (recipeRelations.length === 0) {
+        res.json([]);
+        return;
+      }
+
+      // Fetch the actual recipes
+      const recipeIds = recipeRelations.map(relation => relation.recipeId);
+      const productRecipesList = await Promise.all(
+        recipeIds.map(id => 
+          db
+            .select()
+            .from(recipes)
+            .where(eq(recipes.id, id))
+            .limit(1)
+            .then(results => results[0])
+        )
+      );
+
+      res.json(productRecipesList);
     } catch (error) {
       console.error("Error fetching recipes:", error);
       res.status(500).json({ error: "Failed to fetch recipes" });
+    }
+  });
+
+  // Add recipe relationship to product
+  app.post("/api/products/:productId/recipes/:recipeId", async (req, res) => {
+    try {
+      const productId = parseInt(req.params.productId);
+      const recipeId = parseInt(req.params.recipeId);
+      const { priority = 1 } = req.body;
+
+      // Check if relationship already exists
+      const existing = await db
+        .select()
+        .from(productRecipes)
+        .where(eq(productRecipes.productId, productId))
+        .where(eq(productRecipes.recipeId, recipeId));
+
+      if (existing.length > 0) {
+        // Update priority if relationship exists
+        await db
+          .update(productRecipes)
+          .set({ priority })
+          .where(eq(productRecipes.productId, productId))
+          .where(eq(productRecipes.recipeId, recipeId));
+      } else {
+        // Create new relationship
+        await db.insert(productRecipes).values({
+          productId,
+          recipeId,
+          priority,
+        });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error adding recipe relationship:", error);
+      res.status(500).json({ error: "Failed to add recipe relationship" });
     }
   });
 
