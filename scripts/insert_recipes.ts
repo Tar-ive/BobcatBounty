@@ -51,14 +51,32 @@ async function insertRecipesAndRelationships() {
     // Get all recipes
     const allRecipes = await db.select().from(recipes1);
 
-    // Recipe to product mappings
+    // Recipe to product mappings with exact names from database
     const recipeRelations = [
-      { recipeName: "Classic Peanut Butter Banana Sandwich", productNames: ["H-E-B Natural Creamy Peanut Butter", "H-E-B Organics Bananas"] },
-      { recipeName: "Greek Yogurt and Banana Smoothie", productNames: ["H-E-B Natural Plain Greek Yogurt", "H-E-B Organics Bananas"] },
-      { recipeName: "Rice and Beans Bowl", productNames: ["Hill Country Fare Long Grain Rice", "H-E-B Black Beans"] },
-      { recipeName: "Whole Wheat Pasta with Onion Sauce", productNames: ["H-E-B Premium Traditional Pasta", "H-E-B Texas Sweet Onions"] },
-      { recipeName: "Tuna Salad Sandwich", productNames: ["Hill Country Fare Chunk Light Tuna in Water", "H-E-B 100% Whole Wheat Bread"] },
-      { recipeName: "Egg and Potato Breakfast Skillet", productNames: ["Hill Country Fare Large Eggs", "Hill Country Fare Russet Potatoes"] }
+      { 
+        recipeName: "Classic Peanut Butter Banana Sandwich", 
+        productNames: ["H-E-B Natural Creamy Peanut Butter (16 oz)", "H-E-B Organics Bananas (per lb)"]
+      },
+      { 
+        recipeName: "Greek Yogurt and Banana Smoothie", 
+        productNames: ["H-E-B Natural Plain Greek Yogurt (32 oz)", "H-E-B Organics Bananas (per lb)"]
+      },
+      { 
+        recipeName: "Rice and Beans Bowl", 
+        productNames: ["Hill Country Fare Long Grain Rice (5 lb)", "H-E-B Black Beans (15 oz)"]
+      },
+      { 
+        recipeName: "Whole Wheat Pasta with Onion Sauce", 
+        productNames: ["H-E-B Premium Traditional Pasta (16 oz)", "H-E-B Texas Sweet Onions (per lb)"]
+      },
+      { 
+        recipeName: "Tuna Salad Sandwich", 
+        productNames: ["Hill Country Fare Chunk Light Tuna in Water (5 oz)", "H-E-B 100% Whole Wheat Bread"]
+      },
+      { 
+        recipeName: "Egg and Potato Breakfast Skillet", 
+        productNames: ["Hill Country Fare Large Eggs (dozen)", "Hill Country Fare Russet Potatoes (5 lb)"]
+      }
     ];
 
     // Clear existing relationships to avoid duplicates
