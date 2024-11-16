@@ -3,8 +3,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Enum types for brand and category
-const brandEnum = z.enum(['nike', 'adidas', 'puma', 'reebok']); // Update with your actual brand values
-const categoryEnum = z.enum(['shoes', 'clothes', 'accessories']); // Update with your actual category values
+const brandEnum = z.enum(['H-E-B', 'Hill Country Fare']); // Update with actual brands
+const categoryEnum = z.enum(['Produce', 'Dairy', 'Spreads', 'Grains', 'Canned Goods', 'Bread']); // Update with actual categories
 
 export const products = pgTable("products", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),

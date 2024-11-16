@@ -8,6 +8,7 @@ export function registerRoutes(app: Express) {
   app.get("/api/products", async (req, res) => {
     try {
       const allProducts = await db.select().from(products1);
+      console.log('Products:', allProducts);
       res.json(allProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -67,6 +68,7 @@ export function registerRoutes(app: Express) {
   app.get("/api/products/:id/recipes", async (req, res) => {
     try {
       const productId = parseInt(req.params.id);
+      console.log('Product ID:', productId);
       
       // Get product recipes
       const recipeRelations = await db
@@ -74,16 +76,20 @@ export function registerRoutes(app: Express) {
           recipeId: recipeProducts1.recipeId,
         })
         .from(recipeProducts1)
-        .where(eq(recipeProducts1.productId, productId))
-        .limit(4);
+        .where(eq(recipeProducts1.productId, productId));
+
+      console.log('Recipe relations:', recipeRelations);
 
       if (recipeRelations.length === 0) {
+        console.log('No recipe relations found for product');
         res.json([]);
         return;
       }
 
       // Fetch the actual recipes
       const recipeIds = recipeRelations.map(relation => relation.recipeId);
+      console.log('Recipe IDs:', recipeIds);
+
       const productRecipesList = await Promise.all(
         recipeIds.map(id => 
           db
@@ -95,6 +101,7 @@ export function registerRoutes(app: Express) {
         )
       );
 
+      console.log('Product recipes:', productRecipesList);
       res.json(productRecipesList);
     } catch (error) {
       console.error("Error fetching recipes:", error);
