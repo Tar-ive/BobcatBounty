@@ -8,43 +8,39 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Product } from "../../db/schema";
+import type { Product1 } from "../../db/schema";
 
 interface ProductCardProps {
-  product: Product;
+  product: Product1;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  if (!product) return null;
+
   return (
     <Card className="overflow-hidden">
-      <CardHeader className="p-0">
-        <div className="aspect-video relative">
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
-          <Badge
-            className="absolute top-2 right-2"
-            variant={product.quantity > 0 ? "success" : "destructive"}
-          >
-            {product.quantity > 0 ? "In Stock" : "Out of Stock"}
-          </Badge>
-        </div>
-      </CardHeader>
       <CardContent className="p-4">
         <CardTitle className="mb-2">{product.name}</CardTitle>
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {product.description}
-        </p>
-        <div className="flex gap-2 mt-2">
-          {(product.dietary as string[]).map((tag) => (
-            <Badge key={tag} variant="outline">{tag}</Badge>
-          ))}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Badge variant={product.quantity > 0 ? "success" : "destructive"}>
+              {product.quantity > 0 ? "In Stock" : "Out of Stock"}
+            </Badge>
+            <Badge variant="secondary">{product.brand}</Badge>
+          </div>
+          <div className="flex gap-2">
+            {product.vegan && <Badge variant="outline">Vegan</Badge>}
+            {product.glutenFree && <Badge variant="outline">Gluten Free</Badge>}
+          </div>
+          {product.calories && (
+            <p className="text-sm text-muted-foreground">
+              Calories: {product.calories}
+            </p>
+          )}
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/product/${product.productId}`}>
           <Button className="w-full">View Details</Button>
         </Link>
       </CardFooter>

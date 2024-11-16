@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RecipeCard from "../components/RecipeCard";
-import type { Product, Recipe } from "../../db/schema";
+import type { Product1, Recipe } from "../../db/schema";
 
 export default function Product() {
   const { id } = useParams();
-  const { data: product } = useSWR<Product>(`/api/products/${id}`);
+  const { data: product } = useSWR<Product1>(`/api/products/${id}`);
   const { data: recipes } = useSWR<Recipe[]>(`/api/products/${id}/recipes`);
 
   if (!product) return <div>Loading...</div>;
@@ -25,22 +25,25 @@ export default function Product() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-64 object-cover rounded-lg"
-            />
-            <p className="text-lg">{product.description}</p>
-            <div className="flex gap-2">
-              {(product.dietary as string[]).map((tag) => (
-                <Badge key={tag} variant="secondary">{tag}</Badge>
-              ))}
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary">{product.brand}</Badge>
+              <Badge variant="secondary">{product.category}</Badge>
             </div>
+            <div className="flex gap-2">
+              {product.vegan && <Badge variant="outline">Vegan</Badge>}
+              {product.glutenFree && <Badge variant="outline">Gluten Free</Badge>}
+            </div>
+            {product.calories && (
+              <p className="text-lg">Calories: {product.calories}</p>
+            )}
             <div className="flex items-center gap-2">
               <span className="font-semibold">Available:</span>
               <Badge variant={product.quantity > 0 ? "success" : "destructive"}>
                 {product.quantity > 0 ? "In Stock" : "Out of Stock"}
               </Badge>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Best used within {product.expiryDays} days
             </div>
           </div>
         </CardContent>
