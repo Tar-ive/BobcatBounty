@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RecipeCard from "../components/RecipeCard";
-import type { Product, Recipe } from "../../../db/schema";
+import type { Products1, Recipe1 } from "../../db/schema";
 
 export default function Product() {
   const { id } = useParams();
-  const { data: product } = useSWR<Product>(`/api/products/${id}`);
-  const { data: recipes } = useSWR<Recipe[]>(`/api/products/${id}/recipes`);
+  const { data: product } = useSWR<Products1>(`/api/products/${id}`);
+  const { data: recipes } = useSWR<Recipe1[]>(`/api/products/${id}/recipes`);
 
   if (!product) return <div>Loading...</div>;
 
@@ -26,14 +26,15 @@ export default function Product() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center gap-2">
+              <Badge variant="secondary">{product.brand}</Badge>
               <Badge variant="secondary">{product.category}</Badge>
             </div>
-            {product.dietary && product.dietary.length > 0 && (
-              <div className="flex gap-2">
-                {product.dietary.map((tag, idx) => (
-                  <Badge key={idx} variant="outline">{tag}</Badge>
-                ))}
-              </div>
+            <div className="flex gap-2">
+              {product.vegan && <Badge variant="outline">Vegan</Badge>}
+              {product.glutenFree && <Badge variant="outline">Gluten Free</Badge>}
+            </div>
+            {product.calories && (
+              <p className="text-lg">Calories: {product.calories}</p>
             )}
             <div className="flex items-center gap-2">
               <span className="font-semibold">Available:</span>
@@ -42,7 +43,7 @@ export default function Product() {
               </Badge>
             </div>
             <div className="text-sm text-muted-foreground">
-              {product.description}
+              Best used within {product.expiryDays} days
             </div>
           </div>
         </CardContent>

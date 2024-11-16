@@ -18,19 +18,14 @@ export default function Home() {
   );
 
   return (
-      <div className="space-y-8">
-        {/* Hero Section */}
-        <div
-          className="relative w-full h-[50vh] bg-cover bg-center flex items-center justify-center"
-          style={{
-            backgroundImage: `url('/Homepage.jpg')`, // Replace with the actual path to the background image
-          }}
-        >
-          <div className="bg-black bg-opacity-50 p-6 rounded-lg text-center text-white">
-            <h1 className="text-4xl font-bold mb-4">What's in the Bounty?</h1>
-            <div className="flex gap-4 items-center justify-center max-w-xl mx-auto">
-              <Input
-                placeholder="Search products..."
+    <div className="space-y-8">
+      <section className="space-y-4">
+        <h1 className="text-4xl font-bold text-primary">What's in the Bounty?</h1>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex gap-4">
+              <Input 
+                placeholder="Search products..." 
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="flex-1"
@@ -40,8 +35,9 @@ export default function Home() {
                 Search
               </Button>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+      </section>
 
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Available Products</h2>

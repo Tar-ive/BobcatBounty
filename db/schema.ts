@@ -2,6 +2,10 @@ import { pgTable, text, integer, timestamp, json, boolean, varchar } from "drizz
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Enum types for brand and category
+const brandEnum = z.enum(['nike', 'adidas', 'puma', 'reebok']); // Update with your actual brand values
+const categoryEnum = z.enum(['shoes', 'clothes', 'accessories']); // Update with your actual category values
+
 export const products = pgTable("products", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: text("name").notNull(),
@@ -13,21 +17,30 @@ export const products = pgTable("products", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const recipes = pgTable("recipes1", {
+export const products1 = pgTable("products1", {
+  productId: integer("product_id").primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar("name", { length: 100 }).notNull(),
+  brand: text("brand").notNull(),
+  category: text("category").notNull(),
+  calories: integer("calories"),
+  quantity: integer("quantity").notNull(),
+  expiryDays: integer("expiry_days").notNull(),
+  vegan: boolean("vegan").notNull(),
+  glutenFree: boolean("gluten_free").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const recipes1 = pgTable("recipes1", {
   recipeId: integer("recipe_id").primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description").notNull(),
   prepTime: integer("prep_time"),
   cookingTime: integer("cooking_time"),
-  ingredients: json("ingredients").notNull().default(['{}']).$type<string[]>(),
-  instructions: json("instructions").notNull().default(['{}']).$type<string[]>(),
-  imageUrl: text("image_url"),
-  dietaryTags: json("dietary_tags").default(['{}']).$type<string[]>()
 });
 
-export const recipeProducts = pgTable("recipe_products1", {
-  recipeId: integer("recipe_id").notNull().references(() => recipes.recipeId),
-  productId: integer("product_id").notNull().references(() => products.id),
+export const recipeProducts1 = pgTable("recipe_products1", {
+  recipeId: integer("recipe_id").notNull().references(() => recipes1.recipeId),
+  productId: integer("product_id").notNull().references(() => products1.productId),
 });
 
 export const locationInfo = pgTable("location_info", {
@@ -46,19 +59,24 @@ export const selectProductSchema = createSelectSchema(products);
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = z.infer<typeof selectProductSchema>;
 
-// Recipe schemas
-export const insertRecipeSchema = createInsertSchema(recipes);
-export const selectRecipeSchema = createSelectSchema(recipes);
-export type InsertRecipe = z.infer<typeof insertRecipeSchema>;
-export type Recipe = z.infer<typeof selectRecipeSchema>;
+// Products1 schemas
+export const insertProducts1Schema = createInsertSchema(products1);
+export const selectProducts1Schema = createSelectSchema(products1);
+export type InsertProducts1 = z.infer<typeof insertProducts1Schema>;
+export type Products1 = z.infer<typeof selectProducts1Schema>;
 
-// RecipeProducts schemas
-export const insertRecipeProductSchema = createInsertSchema(recipeProducts);
-export const selectRecipeProductSchema = createSelectSchema(recipeProducts);
-export type InsertRecipeProduct = z.infer<typeof insertRecipeProductSchema>;
-export type RecipeProduct = z.infer<typeof selectRecipeProductSchema>;
+// Recipe1 schemas
+export const insertRecipe1Schema = createInsertSchema(recipes1);
+export const selectRecipe1Schema = createSelectSchema(recipes1);
+export type InsertRecipe1 = z.infer<typeof insertRecipe1Schema>;
+export type Recipe1 = z.infer<typeof selectRecipe1Schema>;
 
-// Location schemas
+// RecipeProducts1 schemas
+export const insertRecipeProducts1Schema = createInsertSchema(recipeProducts1);
+export const selectRecipeProducts1Schema = createSelectSchema(recipeProducts1);
+export type InsertRecipeProducts1 = z.infer<typeof insertRecipeProducts1Schema>;
+export type RecipeProducts1 = z.infer<typeof selectRecipeProducts1Schema>;
+
 export const insertLocationSchema = createInsertSchema(locationInfo);
 export const selectLocationSchema = createSelectSchema(locationInfo);
 export type InsertLocation = z.infer<typeof insertLocationSchema>;
