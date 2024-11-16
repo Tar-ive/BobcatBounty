@@ -16,28 +16,26 @@ export default function NavBar() {
         <NavigationMenu>
           <NavigationMenuList className="h-16">
             <NavigationMenuItem>
-              <Link href="/">
-                <NavigationMenuLink
-                  className={cn(
-                    "text-lg font-semibold hover:text-primary transition-colors",
-                    location === "/" && "text-primary"
-                  )}
-                >
-                  Home
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                asChild
+                className={cn(
+                  "text-lg font-semibold hover:text-primary transition-colors",
+                  location === "/" && "text-primary"
+                )}
+              >
+                <Link href="/">Home</Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/inventory">
-                <NavigationMenuLink
-                  className={cn(
-                    "text-lg font-semibold hover:text-primary transition-colors",
-                    location === "/inventory" && "text-primary"
-                  )}
-                >
-                  Inventory
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                asChild
+                className={cn(
+                  "text-lg font-semibold hover:text-primary transition-colors",
+                  location === "/inventory" && "text-primary"
+                )}
+              >
+                <Link href="/inventory">Inventory</Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
