@@ -5,10 +5,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Recipe1 } from "../../db/schema";
+import type { Recipe } from "../../../db/schema";
 
 interface RecipeCardProps {
-  recipe: Recipe1;
+  recipe: Recipe;
 }
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
@@ -35,6 +35,25 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               </div>
             )}
           </div>
+
+          {recipe.ingredients && recipe.ingredients.length > 0 && (
+            <div>
+              <h4 className="font-semibold mb-2">Ingredients:</h4>
+              <ul className="list-disc pl-5">
+                {recipe.ingredients.map((ingredient, idx) => (
+                  <li key={idx}>{ingredient}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {recipe.dietaryTags && recipe.dietaryTags.length > 0 && (
+            <div className="flex gap-2 flex-wrap">
+              {recipe.dietaryTags.map((tag, idx) => (
+                <Badge key={idx} variant="secondary">{tag}</Badge>
+              ))}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

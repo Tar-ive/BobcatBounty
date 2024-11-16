@@ -1,13 +1,13 @@
 import type { Express } from "express";
 import { eq, asc } from "drizzle-orm";
 import { db } from "../db";
-import { products1, recipes1, locationInfo, recipeProducts1 } from "../db/schema";
+import { products, recipes, locationInfo, recipeProducts } from "../db/schema";
 
 export function registerRoutes(app: Express) {
   // Products
   app.get("/api/products", async (req, res) => {
     try {
-      const allProducts = await db.select().from(products1);
+      const allProducts = await db.select().from(products);
       res.json(allProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -19,8 +19,8 @@ export function registerRoutes(app: Express) {
     try {
       const product = await db
         .select()
-        .from(products1)
-        .where(eq(products1.productId, parseInt(req.params.id)))
+        .from(products)
+        .where(eq(products.id, parseInt(req.params.id)))
         .limit(1);
       
       if (product.length === 0) {
@@ -40,8 +40,8 @@ export function registerRoutes(app: Express) {
       const { change } = req.body;
       const product = await db
         .select()
-        .from(products1)
-        .where(eq(products1.productId, parseInt(req.params.id)))
+        .from(products)
+        .where(eq(products.id, parseInt(req.params.id)))
         .limit(1);
       
       if (product.length === 0) {
@@ -52,9 +52,9 @@ export function registerRoutes(app: Express) {
       const newQuantity = Math.max(0, product[0].quantity + change);
       
       await db
-        .update(products1)
+        .update(products)
         .set({ quantity: newQuantity })
-        .where(eq(products1.productId, parseInt(req.params.id)));
+        .where(eq(products.id, parseInt(req.params.id)));
       
       res.json({ success: true });
     } catch (error) {
@@ -68,34 +68,25 @@ export function registerRoutes(app: Express) {
     try {
       const productId = parseInt(req.params.id);
       
-      // Get product recipes
+      // Get product recipes with prep time ordering
       const recipeRelations = await db
         .select({
-          recipeId: recipeProducts1.recipeId,
+          recipe: recipes,
         })
-        .from(recipeProducts1)
-        .where(eq(recipeProducts1.productId, productId))
-        .limit(4);
+        .from(recipeProducts)
+        .where(eq(recipeProducts.productId, productId))
+        .innerJoin(recipes, eq(recipes.recipeId, recipeProducts.recipeId))
+        .orderBy(asc(recipes.prepTime))  // Order by prep time to show quick recipes first
+        .limit(4);  // Limit to 4 recipes per ingredient
 
       if (recipeRelations.length === 0) {
         res.json([]);
         return;
       }
 
-      // Fetch the actual recipes
-      const recipeIds = recipeRelations.map(relation => relation.recipeId);
-      const productRecipesList = await Promise.all(
-        recipeIds.map(id => 
-          db
-            .select()
-            .from(recipes1)
-            .where(eq(recipes1.recipeId, id))
-            .limit(1)
-            .then(results => results[0])
-        )
-      );
-
-      res.json(productRecipesList);
+      // Transform the data to match the expected format
+      const recipesList = recipeRelations.map(relation => relation.recipe);
+      res.json(recipesList);
     } catch (error) {
       console.error("Error fetching recipes:", error);
       res.status(500).json({ error: "Failed to fetch recipes" });
@@ -111,13 +102,13 @@ export function registerRoutes(app: Express) {
       // Check if relationship already exists
       const existing = await db
         .select()
-        .from(recipeProducts1)
-        .where(eq(recipeProducts1.productId, productId))
-        .where(eq(recipeProducts1.recipeId, recipeId));
+        .from(recipeProducts)
+        .where(eq(recipeProducts.productId, productId))
+        .where(eq(recipeProducts.recipeId, recipeId));
 
       if (existing.length === 0) {
         // Create new relationship
-        await db.insert(recipeProducts1).values({
+        await db.insert(recipeProducts).values({
           productId,
           recipeId,
         });
