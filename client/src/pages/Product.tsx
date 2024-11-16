@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RecipeCard from "../components/RecipeCard";
-import type { Product1, Recipe } from "../../db/schema";
+import type { Products1, Recipe } from "../../db/schema";
 
 export default function Product() {
   const { id } = useParams();
-  const { data: product } = useSWR<Product1>(`/api/products/${id}`);
+  const { data: product } = useSWR<Products1>(`/api/products/${id}`);
   const { data: recipes } = useSWR<Recipe[]>(`/api/products/${id}/recipes`);
 
   if (!product) return <div>Loading...</div>;
@@ -38,7 +38,7 @@ export default function Product() {
             )}
             <div className="flex items-center gap-2">
               <span className="font-semibold">Available:</span>
-              <Badge variant={product.quantity > 0 ? "success" : "destructive"}>
+              <Badge variant="default" className={product.quantity > 0 ? "bg-green-500" : "bg-red-500"}>
                 {product.quantity > 0 ? "In Stock" : "Out of Stock"}
               </Badge>
             </div>

@@ -1,13 +1,13 @@
 import type { Express } from "express";
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { product1, recipes, locationInfo } from "../db/schema";
+import { products1, recipes, locationInfo } from "../db/schema";
 
 export function registerRoutes(app: Express) {
   // Products
   app.get("/api/products", async (req, res) => {
     try {
-      const allProducts = await db.select().from(product1);
+      const allProducts = await db.select().from(products1);
       res.json(allProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -19,8 +19,8 @@ export function registerRoutes(app: Express) {
     try {
       const product = await db
         .select()
-        .from(product1)
-        .where(eq(product1.productId, parseInt(req.params.id)))
+        .from(products1)
+        .where(eq(products1.productId, parseInt(req.params.id)))
         .limit(1);
       
       if (product.length === 0) {
@@ -40,8 +40,8 @@ export function registerRoutes(app: Express) {
       const { change } = req.body;
       const product = await db
         .select()
-        .from(product1)
-        .where(eq(product1.productId, parseInt(req.params.id)))
+        .from(products1)
+        .where(eq(products1.productId, parseInt(req.params.id)))
         .limit(1);
       
       if (product.length === 0) {
@@ -52,9 +52,9 @@ export function registerRoutes(app: Express) {
       const newQuantity = Math.max(0, product[0].quantity + change);
       
       await db
-        .update(product1)
+        .update(products1)
         .set({ quantity: newQuantity })
-        .where(eq(product1.productId, parseInt(req.params.id)));
+        .where(eq(products1.productId, parseInt(req.params.id)));
       
       res.json({ success: true });
     } catch (error) {

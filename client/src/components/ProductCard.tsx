@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Product1 } from "../../db/schema";
+import type { Products1 } from "../../db/schema";
 
 interface ProductCardProps {
-  product: Product1;
+  product: Products1;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <CardTitle className="mb-2">{product.name}</CardTitle>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Badge variant={product.quantity > 0 ? "success" : "destructive"}>
+            <Badge variant="default" className={product.quantity > 0 ? "bg-green-500" : "bg-red-500"}>
               {product.quantity > 0 ? "In Stock" : "Out of Stock"}
             </Badge>
             <Badge variant="secondary">{product.brand}</Badge>
