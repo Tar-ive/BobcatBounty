@@ -11,10 +11,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Product } from "../../db/schema";
+import type { Products1 } from "../../db/schema";
 
 export default function Inventory() {
-  const { data: products, mutate } = useSWR<Product[]>("/api/products");
+  const { data: products, mutate } = useSWR<Products1[]>("/api/products");
   const [filter, setFilter] = useState("");
 
   const filteredProducts = products?.filter(product =>
@@ -46,6 +46,7 @@ export default function Inventory() {
         <TableHeader>
           <TableRow>
             <TableHead>Product</TableHead>
+            <TableHead>Brand</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Dietary Info</TableHead>
@@ -54,15 +55,15 @@ export default function Inventory() {
         </TableHeader>
         <TableBody>
           {filteredProducts?.map((product) => (
-            <TableRow key={product.id}>
+            <TableRow key={product.productId}>
               <TableCell>{product.name}</TableCell>
+              <TableCell>{product.brand}</TableCell>
               <TableCell>{product.category}</TableCell>
               <TableCell>{product.quantity}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  {(product.dietary as string[]).map((tag) => (
-                    <Badge key={tag} variant="outline">{tag}</Badge>
-                  ))}
+                  {product.vegan && <Badge variant="outline">Vegan</Badge>}
+                  {product.glutenFree && <Badge variant="outline">Gluten Free</Badge>}
                 </div>
               </TableCell>
               <TableCell>
@@ -70,7 +71,7 @@ export default function Inventory() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => updateQuantity(product.id, -1)}
+                    onClick={() => updateQuantity(product.productId, -1)}
                     disabled={product.quantity <= 0}
                   >
                     -
@@ -78,7 +79,7 @@ export default function Inventory() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => updateQuantity(product.id, 1)}
+                    onClick={() => updateQuantity(product.productId, 1)}
                   >
                     +
                   </Button>

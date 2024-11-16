@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import ProductCard from "../components/ProductCard";
 import LocationMap from "../components/LocationMap";
-import type { Product } from "../../db/schema";
+import type { Products1 } from "../../db/schema";
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const { data: products } = useSWR<Product[]>("/api/products");
+  const { data: products } = useSWR<Products1[]>("/api/products");
   const { data: location } = useSWR("/api/location");
 
   const filteredProducts = products?.filter(product =>
@@ -43,7 +43,7 @@ export default function Home() {
         <h2 className="text-2xl font-semibold">Available Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts?.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.productId} product={product} />
           ))}
         </div>
       </section>
