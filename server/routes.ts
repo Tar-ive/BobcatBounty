@@ -64,6 +64,16 @@ export function registerRoutes(app: Express) {
   });
 
   // Recipes
+  app.get("/api/recipes", async (req, res) => {
+    try {
+      const allRecipes = await db.select().from(recipes1);
+      res.json(allRecipes);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+      res.status(500).json({ error: "Failed to fetch recipes" });
+    }
+  });
+
   app.get("/api/products/:id/recipes", async (req, res) => {
     try {
       const productId = parseInt(req.params.id);
