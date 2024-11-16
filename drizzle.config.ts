@@ -1,19 +1,14 @@
-import type { Config } from "drizzle-kit";
-import * as dotenv from "dotenv";
+import { defineConfig } from "drizzle-kit";
 
-dotenv.config();
-
-if (!process.env.NEON_DATABASE_URL) {
-  throw new Error("NEON_DATABASE_URL must be set in the environment variables");
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL, ensure the database is provisioned");
 }
 
-export default {
+export default defineConfig({
+  out: "./migrations",
   schema: "./db/schema.ts",
-  out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    connectionString: process.env.NEON_DATABASE_URL
+    url: process.env.DATABASE_URL,
   },
-  verbose: true,
-  strict: true,
-} satisfies Config;
+});
