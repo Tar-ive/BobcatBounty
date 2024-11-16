@@ -17,7 +17,7 @@ export const products = pgTable("products", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const products1 = pgTable("products1", {
+export const product1 = pgTable("product1", {
   productId: integer("product_id").primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 100 }).notNull(),
   brand: text("brand").notNull(), // Assuming brand_type is implemented as text
@@ -56,11 +56,11 @@ export const selectProductSchema = createSelectSchema(products);
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = z.infer<typeof selectProductSchema>;
 
-// New products1 schemas
-export const insertProducts1Schema = createInsertSchema(products1);
-export const selectProducts1Schema = createSelectSchema(products1);
-export type InsertProducts1 = z.infer<typeof insertProducts1Schema>;
-export type Products1 = z.infer<typeof selectProducts1Schema>;
+// New product1 schemas
+export const insertProduct1Schema = createInsertSchema(product1);
+export const selectProduct1Schema = createSelectSchema(product1);
+export type InsertProduct1 = z.infer<typeof insertProduct1Schema>;
+export type Product1 = z.infer<typeof selectProduct1Schema>;
 
 // Existing schemas
 export const insertRecipeSchema = createInsertSchema(recipes);

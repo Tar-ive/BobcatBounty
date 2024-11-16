@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h1 className="text-4xl font-bold text-primary">Food Assistance Program</h1>
+        <h1 className="text-4xl font-bold text-primary">What's in the Bounty?</h1>
         <Card>
           <CardContent className="p-6">
             <div className="flex gap-4">
@@ -37,15 +37,6 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Available Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts?.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
       </section>
 
       <section className="space-y-4">
