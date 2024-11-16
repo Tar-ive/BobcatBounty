@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { eq, asc } from "drizzle-orm";
 import { db } from "../db";
-import { products1, recipes, locationInfo, productRecipes } from "../db/schema";
+import { products1, recipes1, locationInfo, recipeProducts1 } from "../db/schema";
 
 export function registerRoutes(app: Express) {
   // Products
@@ -68,14 +68,13 @@ export function registerRoutes(app: Express) {
     try {
       const productId = parseInt(req.params.id);
       
-      // Get product recipes with priority ordering
+      // Get product recipes
       const recipeRelations = await db
         .select({
-          recipeId: productRecipes.recipeId,
+          recipeId: recipeProducts1.recipeId,
         })
-        .from(productRecipes)
-        .where(eq(productRecipes.productId, productId))
-        .orderBy(asc(productRecipes.priority))
+        .from(recipeProducts1)
+        .where(eq(recipeProducts1.productId, productId))
         .limit(4);
 
       if (recipeRelations.length === 0) {
@@ -89,8 +88,8 @@ export function registerRoutes(app: Express) {
         recipeIds.map(id => 
           db
             .select()
-            .from(recipes)
-            .where(eq(recipes.id, id))
+            .from(recipes1)
+            .where(eq(recipes1.recipeId, id))
             .limit(1)
             .then(results => results[0])
         )
@@ -108,28 +107,19 @@ export function registerRoutes(app: Express) {
     try {
       const productId = parseInt(req.params.productId);
       const recipeId = parseInt(req.params.recipeId);
-      const { priority = 1 } = req.body;
 
       // Check if relationship already exists
       const existing = await db
         .select()
-        .from(productRecipes)
-        .where(eq(productRecipes.productId, productId))
-        .where(eq(productRecipes.recipeId, recipeId));
+        .from(recipeProducts1)
+        .where(eq(recipeProducts1.productId, productId))
+        .where(eq(recipeProducts1.recipeId, recipeId));
 
-      if (existing.length > 0) {
-        // Update priority if relationship exists
-        await db
-          .update(productRecipes)
-          .set({ priority })
-          .where(eq(productRecipes.productId, productId))
-          .where(eq(productRecipes.recipeId, recipeId));
-      } else {
+      if (existing.length === 0) {
         // Create new relationship
-        await db.insert(productRecipes).values({
+        await db.insert(recipeProducts1).values({
           productId,
           recipeId,
-          priority,
         });
       }
 

@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RecipeCard from "../components/RecipeCard";
-import type { Products1, Recipe } from "../../db/schema";
+import type { Products1, Recipe1 } from "../../db/schema";
 
 export default function Product() {
   const { id } = useParams();
   const { data: product } = useSWR<Products1>(`/api/products/${id}`);
-  const { data: recipes } = useSWR<Recipe[]>(`/api/products/${id}/recipes`);
+  const { data: recipes } = useSWR<Recipe1[]>(`/api/products/${id}/recipes`);
 
   if (!product) return <div>Loading...</div>;
 
@@ -53,7 +53,7 @@ export default function Product() {
         <h2 className="text-2xl font-semibold">Recipe Suggestions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {recipes?.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard key={recipe.recipeId} recipe={recipe} />
           ))}
         </div>
       </section>

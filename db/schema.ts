@@ -30,23 +30,17 @@ export const products1 = pgTable("products1", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const recipes = pgTable("recipes", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  name: text("name").notNull(),
+export const recipes1 = pgTable("recipes1", {
+  recipeId: integer("recipe_id").primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar("name", { length: 100 }).notNull(),
   description: text("description").notNull(),
-  ingredients: json("ingredients").notNull().$type<string[]>(),
-  instructions: json("instructions").notNull().$type<string[]>(),
-  imageUrl: text("image_url"),
-  dietaryTags: json("dietary_tags").notNull().default(['{}']).$type<string[]>(),
+  prepTime: integer("prep_time"),
+  cookingTime: integer("cooking_time"),
 });
 
-// New product-recipe relationship table
-export const productRecipes = pgTable("product_recipes", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+export const recipeProducts1 = pgTable("recipe_products1", {
+  recipeId: integer("recipe_id").notNull().references(() => recipes1.recipeId),
   productId: integer("product_id").notNull().references(() => products1.productId),
-  recipeId: integer("recipe_id").notNull().references(() => recipes.id),
-  priority: integer("priority").notNull().default(1), // Lower number means higher priority
-  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const locationInfo = pgTable("location_info", {
@@ -59,29 +53,29 @@ export const locationInfo = pgTable("location_info", {
   hours: json("hours").notNull().$type<Record<string, string>>(),
 });
 
-// Existing schemas
+// Product schemas
 export const insertProductSchema = createInsertSchema(products);
 export const selectProductSchema = createSelectSchema(products);
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = z.infer<typeof selectProductSchema>;
 
-// New products1 schemas
+// Products1 schemas
 export const insertProducts1Schema = createInsertSchema(products1);
 export const selectProducts1Schema = createSelectSchema(products1);
 export type InsertProducts1 = z.infer<typeof insertProducts1Schema>;
 export type Products1 = z.infer<typeof selectProducts1Schema>;
 
-// Recipe schemas
-export const insertRecipeSchema = createInsertSchema(recipes);
-export const selectRecipeSchema = createSelectSchema(recipes);
-export type InsertRecipe = z.infer<typeof insertRecipeSchema>;
-export type Recipe = z.infer<typeof selectRecipeSchema>;
+// Recipe1 schemas
+export const insertRecipe1Schema = createInsertSchema(recipes1);
+export const selectRecipe1Schema = createSelectSchema(recipes1);
+export type InsertRecipe1 = z.infer<typeof insertRecipe1Schema>;
+export type Recipe1 = z.infer<typeof selectRecipe1Schema>;
 
-// Product-Recipe relationship schemas
-export const insertProductRecipeSchema = createInsertSchema(productRecipes);
-export const selectProductRecipeSchema = createSelectSchema(productRecipes);
-export type InsertProductRecipe = z.infer<typeof insertProductRecipeSchema>;
-export type ProductRecipe = z.infer<typeof selectProductRecipeSchema>;
+// RecipeProducts1 schemas
+export const insertRecipeProducts1Schema = createInsertSchema(recipeProducts1);
+export const selectRecipeProducts1Schema = createSelectSchema(recipeProducts1);
+export type InsertRecipeProducts1 = z.infer<typeof insertRecipeProducts1Schema>;
+export type RecipeProducts1 = z.infer<typeof selectRecipeProducts1Schema>;
 
 export const insertLocationSchema = createInsertSchema(locationInfo);
 export const selectLocationSchema = createSelectSchema(locationInfo);

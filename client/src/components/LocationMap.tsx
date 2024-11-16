@@ -46,19 +46,8 @@ export default function LocationMap({ location }: LocationMapProps) {
           <div>
             <h4 className="font-semibold mb-2">Distribution Information:</h4>
             <p className="text-muted-foreground">
-              The pantry takes place every Monday from 4:30 – 6:30 PM in FCS 187 during the spring and fall semesters. Please check our social media for summer distribution information! Dates/times are subject to change.
+              The pantry takes place every Monday from 4:30 – 6:30 PM in <b>Food and Consumer Science Building 187</b> during the spring and fall semesters. Please check our social media for summer distribution information! Dates/times are subject to change.
             </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Hours:</h4>
-            <ul className="space-y-1">
-              {Object.entries(location.hours).map(([day, hours]) => (
-                <li key={day} className="flex justify-between">
-                  <span className="font-medium">{day}</span>
-                  <span>{hours}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </CardContent>
