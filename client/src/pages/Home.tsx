@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h1 className="text-4xl font-bold text-primary">Food Assistance Program</h1>
+        <h1 className="text-4xl font-bold text-primary">What's in the Bounty?</h1>
         <Card>
           <CardContent className="p-6">
             <div className="flex gap-4">
