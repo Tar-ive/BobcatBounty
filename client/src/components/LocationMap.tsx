@@ -32,7 +32,7 @@ export default function LocationMap({ location }: LocationMapProps) {
             <h4 className="font-semibold mb-2">Address:</h4>
             <p>{location.address}</p>
             <a 
-              href={`https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`}
+              href="https://maps.app.goo.gl/9uFmZso1Kru47pgP8" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-block mt-2"
@@ -48,6 +48,17 @@ export default function LocationMap({ location }: LocationMapProps) {
             <p className="text-muted-foreground">
               The pantry takes place every Monday from 4:30 – 6:30 PM in FCS 187 during the spring and fall semesters. Please check our social media for summer distribution information! Dates/times are subject to change.
             </p>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Hours:</h4>
+            <ul className="space-y-1">
+              {Object.entries(location.hours).map(([day, hours]) => (
+                <li key={day} className="flex justify-between">
+                  <span className="font-medium">{day}</span>
+                  <span>{hours}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </CardContent>
