@@ -19,28 +19,25 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      <div
-        className="relative w-full h-[50vh] bg-cover bg-center flex items-center justify-center"
-        style={{
-          backgroundImage: `url('https://cdn.discordapp.com/attachments/1307386345962078271/1307448673894141973/BCB_Group_Photo_18.jpg?ex=673a57f7&is=67390677&hm=19a1e9cfe7a666b824385109d7d8cdb4de1ccbc7c30efed7e791b900f8c3c6cf&')`, // Replace with the actual path to the background image
-        }}
-      >
-        <div className="bg-black bg-opacity-50 p-6 rounded-lg text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">What's in the Bounty?</h1>
-          <div className="flex gap-4 items-center justify-center max-w-xl mx-auto">
-            <Input
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="flex-1"
-            />
-            <Button>
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </Button>
-          </div>
-        </div>
-      </div>
+      <section className="space-y-4">
+        <h1 className="text-4xl font-bold text-primary">What's in the Bounty?</h1>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex gap-4">
+              <Input 
+                placeholder="Search products..." 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1"
+              />
+              <Button>
+                <Search className="mr-2 h-4 w-4" />
+                Search
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Available Products</h2>
